@@ -1,0 +1,47 @@
+% Output data (With Load Condition)
+x = [60.39, 59.65, 59.32, 58.55, 56.79, 55.20];           % Output Voltage (X-axis)
+y = [0.000, 0.415, 0.621, 1.227, 2.359, 3.412];           % Output Current (Y-axis)
+
+% Uncertainties
+xerr = [0.01/2, 0.02/2, 0.02/2, 0.02/2, 0.02/2, 0.02/2];             % Voltage error
+yerr = [0.000, 0.001/2, 0.001/2, 0.001/2, 0.001/2, 0.001/2];        % Current error
+
+% Create the figure
+figure;
+hold on;
+grid on;
+
+% Plot only markers (Measured Data)
+hData = plot(x, y, 'bo', 'DisplayName', 'Measured Data');
+
+% Plot connecting line separately (no legend)
+plot(x, y, 'b-', 'HandleVisibility', 'off');
+
+% Plot vertical error bars (current) without legend
+errorbar(x, y, yerr, 'LineStyle', 'none', 'Color', 'b', ...
+    'CapSize', 10, 'HandleVisibility', 'off');
+
+% Plot horizontal error bars (voltage)
+for i = 1:length(x)
+    hHErr = line([x(i)-xerr(i), x(i)+xerr(i)], [y(i), y(i)], ...
+        'Color', 'r', 'LineWidth', 1);
+    if i == 1
+        % Add only the first horizontal error bar to legend
+        hHErr.Annotation.LegendInformation.IconDisplayStyle = 'on';
+        hHErr.DisplayName = 'Horizontal Error';
+    else
+        hHErr.Annotation.LegendInformation.IconDisplayStyle = 'off';
+    end
+end
+
+% Dummy plot for vertical error bar in legend
+hVErrLegend = plot(NaN, NaN, 'b|', 'MarkerSize', 12, 'LineWidth', 1.5, ...
+    'DisplayName', 'Vertical Error');
+
+% Labels and title
+xlabel('Output Voltage (V)');
+ylabel('Output Current (A)');
+title('Output Current against Output Voltage with Error Bars');
+
+% Add legend
+legend('Location', 'northeast');
