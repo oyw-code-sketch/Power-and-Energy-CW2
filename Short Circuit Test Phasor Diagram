@@ -1,0 +1,64 @@
+% Clear figure
+clf;
+figure('Position', [100, 100, 800, 800]); % Larger window
+hold on;
+grid on;
+axis equal;
+title('Short Circuit Test Phasor Diagram');
+xlabel('Real Axis');
+ylabel('Imaginary Axis');
+
+% Define angles in degrees
+angle_Vx = 81.07;
+angle_Vr = -8.93;
+angle_Vp = 0;
+angle_Ip = -8.93;
+
+% Define magnitudes
+mag_Vx = 1.869;
+mag_Vr = 11.893;
+mag_Vp = 12.04;
+mag_Ip = 2.244;
+
+% Convert polar to rectangular (complex) form
+Vx = mag_Vx * exp(1j * deg2rad(angle_Vx));
+Vr = mag_Vr * exp(1j * deg2rad(angle_Vr));
+Vp = mag_Vp * exp(1j * deg2rad(angle_Vp));
+Ip = mag_Ip * exp(1j * deg2rad(angle_Ip));
+
+% Plot arrows using quiver (real, imag, delta_x, delta_y)
+quiver(0, 0, real(Vx), imag(Vx), 0, 'r', 'LineWidth', 2, 'MaxHeadSize', 0.5);
+
+quiver(0, 0, real(Vr), imag(Vr), 0, 'b', 'LineWidth', 2, 'MaxHeadSize', 0.5);
+
+quiver(0, 0, real(Vp), imag(Vp), 0, 'g', 'LineWidth', 2, 'MaxHeadSize', 0.5);
+
+quiver(0, 0, real(Ip), imag(Ip), 0, 'm', 'LineWidth', 2, 'MaxHeadSize', 0.5);
+
+% Add phasor labels with magnitude and angle
+text(real(Vx)*1.15, imag(Vx)*1.15, sprintf('V_x = %.3f ∠ %.2f°', mag_Vx, angle_Vx), 'Color', 'r');
+text(real(Vr)*1.05, imag(Vr)*1.1,  sprintf('V_r = %.3f ∠ %.2f°', mag_Vr, angle_Vr), 'Color', 'b');
+text(real(Vp)*1.0,  imag(Vp)*1.1,  sprintf('V_p = %.3f ∠ %.2f°', mag_Vp, angle_Vp), 'Color', 'g');
+text(real(Ip)*0.1,  imag(Ip)*4.90,  sprintf('I_p = %.3f ∠ %.2f°', mag_Ip, angle_Ip), 'Color', 'm');
+
+% Function to draw arc from 0 to given angle
+draw_angle_arc = @(angle_deg, color, radius) ...
+    plot(radius*cosd(linspace(0, angle_deg, 100)), ...
+         radius*sind(linspace(0, angle_deg, 100)), ...
+         'Color', color, 'LineWidth', 1.2, 'LineStyle', '--');
+
+% Draw smaller angle arcs close to origin
+draw_angle_arc(angle_Vx, 'r', 1.0);
+draw_angle_arc(angle_Vr, 'b', 2.0);
+draw_angle_arc(angle_Vp, 'g', 2.0);
+draw_angle_arc(angle_Ip, 'm', 2.0);
+
+% Add angle labels beside arc lines
+text(1.25*cosd(angle_Vx/2), 1.25*sind(angle_Vx/2), sprintf('%.2f°', angle_Vx), 'Color', 'r', 'FontSize', 10);
+text(2.3*cosd(angle_Vr/2), 2.3*sind(angle_Vr/2), sprintf('%.2f°', angle_Vr), 'Color', 'b', 'FontSize', 10);
+text(2.3*cosd(angle_Ip/2), 2.3*sind(angle_Ip/2), sprintf('%.2f°', angle_Ip), 'Color', 'm', 'FontSize', 10);
+
+% Legend and formatting
+legend('V_x', 'V_r', 'V_p', 'I_p');
+xlim([-20 20]);
+ylim([-20 20]);
